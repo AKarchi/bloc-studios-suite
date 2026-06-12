@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOC. STUDIOS // HARDWARE-GRID SHOWCASE</title>
+    <style>
+        /* ========================================================================== */
+        /* SYSTEM DESIGN VARIABLES & THEME STATE MATRIX                               */
+        /* ========================================================================== */
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --border: #000000;
+            --secondary: #666666;
+            --accent: #f0f0f0;
+            --orange: #ffa500;
+            --terminal-bg: #f5f5f5;
+            --green: #22c55e;
+            --premium-bg: #fffbf0;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --border: #ffffff;
+            --secondary: #888888;
+            --accent: #161616;
+            --terminal-bg: #111111;
+            --green: #4ade80;
+            --premium-bg: #1c150c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Mono', Monaco, Consolas, 'Fira Code', monospace;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.2s, color 0.2s;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* ========================================================================== */
+        /* BLOCK MASTER HEADERS WITH EMBEDDED VECTOR LOGO MATRIX                      */
+        /* ========================================================================== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Vector Logo Container Optimization Bounds */
+        .logo-vector-frame {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .logo-wrapper:hover .logo-vector-frame {
+            transform: scale(1.05);
+        }
+
+        .branding h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 1;
+        }
+
+        .branding p {
+            font-size: 0.7rem;
+            color: var(--secondary);
+            margin-top: 6px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .meta-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .tag-parent {
+            font-size: 0.65rem;
+            background: var(--text);
+            color: var(--bg);
+            padding: 2px 6px;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+
+        /* Brutalist Navigation Button Styling */
+        .studio-btn-link {
+            display: inline-flex;
+            align-items: center;
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .studio-btn-link:hover {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .theme-subtext {
+            font-size: 0.6rem;
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        /* ========================================================================== */
+        /* RIG SIMULATOR ENGINE CONTAINER                                             */
+        /* ========================================================================== */
+        .app-simulation-frame {
+            border: 2px solid var(--border);
+            margin-bottom: 40px;
+            background: var(--bg);
+        }
+
+        .sim-header {
+            background: var(--accent);
+            border-bottom: 2px solid var(--border);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .sim-layout-grid {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            min-height: 540px;
+        }
+
+        @media (max-width: 650px) {
+            .sim-layout-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; align-items: flex-start; }
+            .meta-controls { align-items: flex-start; }
+        }
+
+        .sim-sidebar {
+            border-right: 2px solid var(--border);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: var(--bg);
+        }
+
+        @media (max-width: 650px) {
+            .sim-sidebar { border-right: none; border-bottom: 2px solid var(--border); }
+        }
+
+        .timer-box {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .timer-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .timer-row.active-mode {
+            font-weight: bold;
+            color: var(--text);
+            position: relative;
+        }
+
+        .timer-row.active-mode::before {
+            content: "● ";
+            color: var(--orange);
+        }
+
+        .timer-row.inactive-mode {
+            color: var(--secondary);
+        }
+
+        .nav-item {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-align: left;
+            background: transparent;
+            color: var(--text);
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            background: var(--accent);
+            border-color: var(--border);
+        }
+
+        .nav-item.active {
+            background: var(--text);
+            color: var(--bg);
+            font-weight: bold;
+        }
+
+        .sim-viewport {
+            padding: 24px;
+            background: var(--accent);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .sim-view-content {
+            display: none;
+        }
+
+        .sim-view-content.active {
+            display: block;
+        }
+
+        .sim-view-content h2 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+        }
+
+        .sim-view-content p {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--secondary);
+            margin-bottom: 16px;
+        }
+
+        /* ========================================================================== */
+        /* COMPACT SIDE-BY-SIDE SIDE COMPONENT LAYOUTS                                */
+        /* ========================================================================== */
+        .cmd-grid-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        @media (max-width: 780px) {
+            .cmd-grid-split { grid-template-columns: 1fr; gap: 10px; }
+        }
+
+        .cmd-group {
+            margin-bottom: 4px;
+        }
+
+        .cmd-group-title {
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
+            display: inline-block;
+            margin-bottom: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        .cmd-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .cmd-row {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            font-size: 0.7rem;
+            line-height: 1.3;
+            padding: 3px 5px;
+            background: var(--bg);
+            border: 1px solid transparent;
+        }
+
+        .cmd-row:hover {
+            border-color: var(--border);
+        }
+
+        .cmd-trigger {
+            font-weight: bold;
+            color: var(--orange);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .cmd-desc {
+            color: var(--secondary);
+        }
+
+        .premium-cmd-block {
+            background: var(--premium-bg);
+            border: 1px dashed var(--orange);
+            padding: 10px;
+            margin-top: 4px;
+        }
+
+        .premium-cmd-block .cmd-group-title {
+            background: var(--orange);
+            color: #000000;
+            border: none;
+        }
+
+        .premium-cmd-block .cmd-grid-split {
+            margin-bottom: 0;
+        }
+
+        .premium-cmd-block .cmd-row {
+            background: transparent;
+            grid-template-columns: 120px 1fr;
+        }
+
+        /* The Shredder Sub-Component */
+        .shredder-box {
+            border: 1px dashed var(--border);
+            background: var(--bg);
+            padding: 16px;
+            text-align: center;
+            opacity: 0.6;
+            margin-top: auto;
+        }
+
+        .shredder-title {
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .shredder-status {
+            font-size: 0.65rem;
+            color: var(--secondary);
+        }
+
+        /* ========================================================================== */
+        /* PRO RIG CONTENT ELEMENTS                                                   */
+        /* ========================================================================== */
+        .pro-headline-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+
+        .pro-status-badge {
+            font-size: 0.65rem;
+            font-weight: bold;
+            background: var(--orange);
+            color: #000000;
+            padding: 2px 6px;
+        }
+
+        .pro-section-title {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: var(--text);
+            text-transform: uppercase;
+            margin: 14px 0 6px 0;
+            letter-spacing: 0.05em;
+        }
+
+        .pro-step-list {
+            padding-left: 14px;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: var(--secondary);
+        }
+
+        .pro-step-list li {
+            margin-bottom: 6px;
+        }
+
+        .pro-features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 500px) {
+            .pro-features-grid { grid-template-columns: 1fr; }
+        }
+
+        .pro-feature-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-size: 0.7rem;
+            line-height: 1.4;
+        }
+
+        .pro-feature-card strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ========================================================================== */
+        /* INTERACTIVE TERMINAL ENGINE                                                */
+        /* ========================================================================== */
+        .terminal-container {
+            background: var(--terminal-bg);
+            border: 2px solid var(--border);
+            margin-bottom: 40px;
+        }
+
+        .terminal-header {
+            border-bottom: 2px solid var(--border);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            background: var(--accent);
+        }
+
+        .terminal-body {
+            padding: 20px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .terminal-display {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .terminal-prompt-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .prompt-symbol {
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        .terminal-input-mock {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.8rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .terminal-guide-hints {
+            display: flex;
+            gap: 16px;
+            font-size: 0.65rem;
+            color: var(--secondary);
+            margin-top: 8px;
+        }
+
+        /* ========================================================================== */
+        /* METADATA MANIFESTO CARDS GRID                                             */
+        /* ========================================================================== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 750px) {
+            .info-grid { grid-template-columns: 1fr; }
+        }
+
+        .info-card {
+            border: 2px solid var(--border);
+            padding: 24px;
+            background: var(--bg);
+        }
+
+        .card-meta {
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: var(--secondary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .info-card p {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .info-card ul {
+            list-style: none;
+        }
+
+        .info-card li {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            padding-left: 14px;
+            position: relative;
+        }
+
+        .info-card li::before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+            color: var(--orange);
+        }
+
+        /* ========================================================================== */
+        /* FOOTER BRAND BAR CONSOLE CONTROLS                                          */
+        /* ========================================================================== */
+        .utility-bar {
+            border: 2px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            background: var(--bg);
+        }
+
+        .util-link {
+            cursor: pointer;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .util-link:hover {
+            color: var(--orange);
+            text-decoration: underline;
+        }
+
+        footer {
+            border-top: 2px solid var(--border);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--secondary);
+            width: 100%;
+        }
+
+        .footer-brand span {
+            font-weight: bold;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="logo-wrapper" onclick="toggleSystemTheme()">
+            <div class="logo-vector-frame">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 100%; height: 100%; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));">
+                    <defs>
+                        <linearGradient id="blocCrimson" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ef4444" />
+                            <stop offset="100%" stop-color="#991b1b" />
+                        </linearGradient>
+                        <linearGradient id="blocTech" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+                            <stop offset="100%" stop-color="#e4e4e7" stop-opacity="0.4" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 50,15 L 85,32 L 85,68 L 50,85 L 15,68 L 15,32 Z" 
+                          fill="none" 
+                          stroke="var(--text)" 
+                          stroke-width="3" 
+                          stroke-linejoin="round" 
+                          style="opacity: 0.85;" />
+                    <polygon points="50,30 72,41 50,52 28,41" fill="url(#blocTech)" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round" />
+                    <polygon points="28,41 50,52 50,74 28,63" fill="url(#blocCrimson)" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round" />
+                    <polygon points="50,52 72,41 72,63 50,74" fill="var(--secondary)" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round" style="opacity: 0.75;" />
+                    <line x1="50" y1="15" x2="50" y2="30" stroke="var(--border)" stroke-width="2" stroke-dasharray="3,3" />
+                    <line x1="15" y1="68" x2="28" y2="63" stroke="var(--border)" stroke-width="2" stroke-dasharray="3,3" />
+                    <line x1="85" y1="68" x2="72" y2="63" stroke="var(--border)" stroke-width="2" stroke-dasharray="3,3" />
+                </svg>
+            </div>
+            <div class="branding">
+                <h1>BLOC.</h1>
+                <p>Monolithic Productivity Suite Architecture</p>
+            </div>
+        </div>
+        <div class="meta-controls">
+            <div class="tag-parent">ENGINEERED BY MOCHIIWORKS</div>
+            <a href="https://capable-smakager-c0cec3.netlify.app/" target="_blank" class="studio-btn-link">
+                CHECK MAIN WEB PLATFORM ↗
+            </a>
+            <div class="theme-subtext">TAP LOGO FOR DARK MODE</div>
+        </div>
+    </header>
+
+    <section class="app-simulation-frame">
+        <div class="sim-header">
+            <span>[ SYSTEM WORKSPACE INTERFACE MODE ]</span>
+            <span>REV_2026 // DEVICE_LOCAL</span>
+        </div>
+        <div class="sim-layout-grid">
+            
+            <div class="sim-sidebar">
+                <div class="timer-box">
+                    <div class="timer-row active-mode"><span>Focus</span> <span>25:00</span></div>
+                    <div class="timer-row inactive-mode"><span>Short Break</span> <span>5:00</span></div>
+                    <div class="timer-row inactive-mode"><span>Long Break</span> <span>15:00</span></div>
+                </div>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-todo')">To-Do</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-notes')">Notes</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-radar')">Radar</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-caffeine')">Caffeine</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-h2o')">H2O</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-scheduler')">Scheduler</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-archive')">Archive</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-vault')">Vault</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-dump')">Brain Dump</button>
+                <button class="nav-item active" onclick="triggerAppView(event, 'view-terminal')">Terminal</button>
+                <button class="nav-item" onclick="triggerAppView(event, 'view-prorig')" style="border-top: 1px dashed var(--border); margin-top: 6px; font-weight: bold; color: var(--orange);">Pro Rig Access</button>
+            </div>
+
+            <div class="sim-viewport">
+                
+                <div id="view-todo" class="sim-view-content">
+                    <h2>[ To-Do Matrix ]</h2>
+                    <p>High-velocity workflow checkboarding. Structure daily builds, prioritize sprint objectives, and toggle operational task compliance flags instantly without cloud latency layout shifts.</p>
+                </div>
+
+                <div id="view-notes" class="sim-view-content">
+                    <h2>[ Permanent Records ] <span style="font-size:0.65rem; opacity:0.5; margin-left:auto; font-weight:normal;">ALL</span></h2>
+                    <p>Deep-form mechanical thought capturing console framework. Engineered with continuous string buffer persistence layers to securely store code structural documentation, ideas, and architecture schemas.</p>
+                    <div style="border: 1px solid var(--border); padding: 6px 12px; font-size: 0.65rem; font-weight: bold; display: inline-block; background: var(--bg); cursor: pointer;">SAVE NOTE</div>
+                </div>
+
+                <div id="view-radar" class="sim-view-content">
+                    <h2>[ Radar Vitals ]</h2>
+                    <p>A multi-point focus matrix tracking your immediate execution targets. Monitors task completion velocities and tactical milestones across the current running session context layer.</p>
+                </div>
+
+                <div id="view-caffeine" class="sim-view-content">
+                    <h2>[ Caffeine Logic ]</h2>
+                    <p>Track chemical intake inputs dynamically to optimize neurological performance metrics and prevent energy depletion boundaries during long programming operations.</p>
+                </div>
+
+                <div id="view-h2o" class="sim-view-content">
+                    <h2>[ Hydration Core ]</h2>
+                    <p>Monitors daily water ingestion against a system-wide baseline threshold goal. Promotes high cognitive focus and sustained developer stamina states.</p>
+                </div>
+
+                <div id="view-scheduler" class="sim-view-content">
+                    <h2>[ Chrono Scheduler ]</h2>
+                    <p>Block out precise time allocations for system building, architecture review, and rest patterns on a clean, localized terminal chronological layout grid.</p>
+                </div>
+
+                <div id="view-archive" class="sim-view-content">
+                    <h2>[ Historical Logs Archive ]</h2>
+                    <p>The centralized repository where every completed data sequence or finished focus session from the Pomodoro timer is automatically committed. When your active work intervals or configuration breaks expire cleanly, their metadata sets migrate instantly into this timeline tracker to preserve a persistent record of structural build cycles.</p>
+                </div>
+
+                <div id="view-vault" class="sim-view-content">
+                    <h2>[ Local Object Vault ]</h2>
+                    <p>Secure client-side asset repository. Store and preview structural file payloads locally—including images, PDFs, document elements, and media buffers—completely isolated within your native platform sandbox context.</p>
+                </div>
+
+                <div id="view-dump" class="sim-view-content">
+                    <h2>[ Brain Dump Buffer ] <span style="font-size:0.65rem; color: var(--orange); margin-left:auto; font-weight:normal;">24H EXPIRATION</span></h2>
+                    <p>A transient scratchpad for scrap text data and temporary clipboard fragments. Operates on a strict 24-hour decay timer loop—migrate your tactical code concepts or allow them to dissolve completely into the system space.</p>
+                </div>
+
+                <div id="view-prorig" class="sim-view-content">
+                    <div class="pro-headline-block">
+                        <div>
+                            <h2 style="margin-bottom:2px;">LIFETIME PREMIUM ACCESS</h2>
+                            <span style="font-size: 0.6rem; color: var(--secondary);">ONE-TIME CONFIGURATION // SUB-MODULE LICENSE</span>
+                        </div>
+                        <span class="pro-status-badge" id="pro-rig-status">[ STATUS: PRO RIG LOCKED ]</span>
+                    </div>
+
+                    <p>Unlock the full operational capacity of the studio. This is a one-time license for builders who require high-velocity tools.</p>
+
+                    <div class="pro-section-title">How to Unlock Pro:</div>
+                    <ol class="pro-step-list">
+                        <li><strong>Acquire the License:</strong> Click on <span style="text-decoration:underline; cursor:pointer; color:var(--text);" onclick="alert('Redirecting to Patronage channels...')">Support Studio</span>. This is a one-time "Proof of Patronage" transaction—no recurring subscriptions, no financial noise. Pay a minimum amount of $3 to unlock the Pro Rig.</li>
+                        <li><strong>Receive the Activation Key:</strong> Once the transaction is processed, I will send an automated message containing your unique Studio Key.</li>
+                        <li><strong>Initialize the Rig:</strong> Open the Terminal Tab (or press Ctrl + K inside the workspace) and execute: <br><code style="background:var(--bg); padding:2px 4px; border:1px solid var(--border); display:inline-block; margin-top:4px;">/activate [your_key_here]</code></li>
+                    </ol>
+
+                    <div class="pro-section-title">PRO RIG UNLOCKED FEATURES:</div>
+                    <div class="pro-features-grid">
+                        <div class="pro-feature-card">
+                            <strong>🏁 Typing Racer</strong>
+                            Improve speed and accuracy with real-time feedback.
+                        </div>
+                        <div class="pro-feature-card">
+                            <strong>🎨 Studio Tuner</strong>
+                            Advanced theme color palette customizer with live preview.
+                        </div>
+                        <div class="pro-feature-card">
+                            <strong>📡 Local Telemetry</strong>
+                            Track your usage patterns and session metrics locally.
+                        </div>
+                        <div class="pro-feature-card">
+                            <strong>🖼️ Wallpaper Maker</strong>
+                            Convert images into artistic styles (Stitch, Scratch, Contour, Matrix).
+                        </div>
+                        <div class="pro-feature-card">
+                            <strong>🏋️ Workout Monitor</strong>
+                            No-equipment exercise tracker with animated stick figure guidance.
+                        </div>
+                        <div class="pro-feature-card">
+                            <strong>📦 Vault Storage</strong>
+                            Secure local file storage with preview support (PDF, DOCX, Images, etc.)
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-terminal" class="sim-view-content active">
+                    <h2>[ Command Core Shell ]</h2>
+                    <p style="margin-bottom:12px;">Execute system utilities directly via string buffers.</p>
+                    
+                    <div class="cmd-grid-split">
+                        <div class="cmd-group">
+                            <div class="cmd-group-title">[ VIEW TRIGGERS ]</div>
+                            <div class="cmd-list">
+                                <div class="cmd-row"><span class="cmd-trigger">:f</span><span class="cmd-desc">FOCUS ENGINE</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:t</span><span class="cmd-desc">TO-DO LIST</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:n</span><span class="cmd-desc">PERMANENT NOTES</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:r</span><span class="cmd-desc">SYSTEM RADAR</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:d</span><span class="cmd-desc">BRAIN DUMP</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:v</span><span class="cmd-desc">DEV VAULT</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:a</span><span class="cmd-desc">THE ARCHIVE</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:calc</span><span class="cmd-desc">SUMMON CALCULATOR</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:grid</span><span class="cmd-desc">SUMMON ASSET GRID</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">:hex</span><span class="cmd-desc">SWATCH VAULT</span></div>
+                            </div>
+                        </div>
+
+                        <div class="cmd-group">
+                            <div class="cmd-group-title">[ INJECTION CORES ]</div>
+                            <div class="cmd-list">
+                                <div class="cmd-row"><span class="cmd-trigger">/todo [txt]</span><span class="cmd-desc">QUICK TASK LOG</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/note [txt]</span><span class="cmd-desc">QUICK NOTE LOG</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/h2o</span><span class="cmd-desc">REGISTER WATER</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/caf</span><span class="cmd-desc">REGISTER CAFFEINE</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/clear</span><span class="cmd-desc">FLUSH SHREDDER</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cmd-group">
+                        <div class="cmd-group-title">[ UTILITY &amp; QUERY CORES ]</div>
+                        <div class="cmd-grid-split" style="margin-bottom:0;">
+                            <div class="cmd-list">
+                                <div class="cmd-row"><span class="cmd-trigger">/theme [l/d]</span><span class="cmd-desc">TOGGLE LIGHT/DARK</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/shreds</span><span class="cmd-desc">SHOW SHREDDER LOGS</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/find [t/n]..</span><span class="cmd-desc">FIND LOGS BY DATE</span></div>
+                            </div>
+                            <div class="cmd-list">
+                                <div class="cmd-row"><span class="cmd-trigger">/factory-reset</span><span class="cmd-desc">DESTRUCT MASTER DATA</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/activate [k]</span><span class="cmd-desc">LIFETIME ACCESS ACTIVATION</span></div>
+                                <div class="cmd-row"><span class="cmd-trigger">/status</span><span class="cmd-desc">CHECK PRO RIG STATUS</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="premium-cmd-block">
+                        <div class="cmd-group-title">💎 [ PREMIUM ACCESS ]</div>
+                        <div class="cmd-grid-split">
+                            <div class="cmd-row"><span class="cmd-trigger" style="color:var(--text); font-weight:900;">:lock [min]</span><span class="cmd-desc">SESSION LOCKDOWN</span></div>
+                            <div class="cmd-row"><span class="cmd-trigger" style="color:var(--text); font-weight:900;">:zen</span><span class="cmd-desc">SUMMON MINDSET MATRIX</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shredder-box">
+                    <div class="shredder-title">📟 THE SHREDDER // PENDING DISPOSAL UNIT</div>
+                    <div class="shredder-status">SYSTEM EMPTY // NO PENDING DISPOSALS CONFIGURED</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="info-grid">
+        <div class="info-card">
+            <span class="card-meta">⚙️ STUDIO PROFILE</span>
+            <h3>BLOC. STUDIOS <span style="float:right; font-weight:normal; font-size:0.8rem; opacity:0.5;">✕</span></h3>
+            <p style="font-style: italic; color: var(--text); font-weight: bold; margin-bottom: 12px;">"Minimal tools for maximum focus."</p>
+            
+            <span class="card-meta" style="margin-top:16px; display:block;">THE BRAND MANIFESTO</span>
+            <p>Bloc. Studios is a digital creation lab dedicated to stripping away the noise of the modern internet. We build hyper-focused, minimalist web utilities and digital assets designed for creators, builders, and deep-work enthusiasts.</p>
+            <p>Guided by a clean, brutalist-meets-studio aesthetic, our products prioritize lightning-fast performance, intuitive utility, and absolute data privacy. We don't do bloatware—we build the essential blocks you need to create your next big project.</p>
+        </div>
+
+        <div class="info-card">
+            <span class="card-meta">🔒 DATA PRIVACY &amp; AUTO-SAVE NOTE</span>
+            <h3>LOCAL-FIRST ISOLATION</h3>
+            <p><strong>How Auto-Save works:</strong> Every letter you draft, every task you toggle, and every schedule block you modify triggers an instantaneous mechanical auto-save directly to your browser's local sandbox memory (LocalStorage).</p>
+            <p><strong>Absolute Isolation:</strong> This application is completely local-first. We do not use external cloud servers or database tracking systems. Because your data lives strictly inside your physical machine, no other person on earth can read, view, or open your files.</p>
+            <p><strong>Device &amp; Browser Boundaries:</strong> Data is localized within the browser instance sandbox. It will not sync automatically across devices without hardware export transfers.</p>
+        </div>
+    </section>
+
+    <section class="info-grid">
+        <div class="info-card" style="grid-column: 1 / -1;">
+            <span class="card-meta">⏳ THE EPHEMERAL ARCHITECTURE // SYSTEM TIME DECAY</span>
+            <h3>AUTOMATED DISPOSAL &amp; REFRESH INFRASTRUCTURE</h3>
+            <ul>
+                <li><strong>The Brain Dump (Transient Buffer):</strong> A dedicated, high-utility scratchpad for raw, unfiltered thoughts or clipboard scraps. To force active processing, the buffer operates on a strict 24-hour expiration countdown initialized on entry. You must either migrate your concepts to permanent records or allow them to dissolve completely into the system space.</li>
+                <li><strong>The Shredder (Volatile Disposal):</strong> An isolated, low-opacity safety network sitting at the baseline of your core work views. When a Task or permanent Note is deleted via the [DEL] trigger, it is intercepted here instead of vanishing instantly. Items remain restorable for exactly 24 hours from the point of disposal before unrecoverable system decay occurs.</li>
+                <li><strong>The System Pulse (Weekly Vitals):</strong> An automated 7-dot visual efficiency tracker that runs purely on calendar state logic. Rather than tracking historical data bloat, it calculates compliance dynamically across the current week (Monday–Sunday) based on your real-time Radar metrics. The entire grid undergoes an absolute automated wipe the millisecond Monday morning initializes.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="info-grid">
+        <div class="info-card">
+            <span class="card-meta">THE BIO</span>
+            <p>Bloc. Studios | Crafting high-utility, minimalist web applications, digital toolkits, and modular assets for entrepreneurs and deep-work creators. Zero noise. Just building.</p>
+        </div>
+        <div class="info-card">
+            <span class="card-meta">CORE PILLARS</span>
+            <ul>
+                <li><strong>Intentional Minimal Design:</strong> No clutter, no distractions. Every interface is refined down to its absolute necessary form.</li>
+                <li><strong>High-Velocity Utility:</strong> Tools that load instantly and work seamlessly, keeping you in your creative flow state.</li>
+                <li><strong>Local-First Ecosystem:</strong> Privacy-first mindset, leveraging localized browser storage so your data never leaves your machine.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="terminal-container">
+        <div class="terminal-header">
+            <span>BLOC_STUDIO_SHELL // SYSTEM_CONSOLE</span>
+            <span>STATUS: ACTIVE</span>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-display" id="term-output">
+BLOC STUDIO CORE TESTING SHELL INTERACTIVE TERMINAL.
+INPUT ACTIVATION CODES GENERATED VIA SYSTEM PORTALS OR UTILITY COMMAND STRINGS.
+            </div>
+            <div>
+                <div class="terminal-prompt-line">
+                    <span class="prompt-symbol">&gt;</span>
+                    <input type="text" class="terminal-input-mock" id="term-input" placeholder="Type system utility command pattern..." onkeydown="handleTerminalConsoleInput(event)">
+                </div>
+                <div class="terminal-guide-hints">
+                    <span style="color:var(--secondary);">TEST CONSOLE TRIGGERS:</span>
+                    <span style="cursor:pointer; text-decoration:underline;" onclick="sendMockCode(':telemetry')">:telemetry</span>
+                    <span style="cursor:pointer; text-decoration:underline;" onclick="sendMockCode('/activate KEY-9921')">/activate [key]</span>
+                    <span style="cursor:pointer; text-decoration:underline;" onclick="sendMockCode('clear')">clear</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="utility-bar">
+        <span>|</span>
+        <span class="util-link" onclick="alert('Exporting localized system log: bloc_backup.json')">Export JSON</span>
+        <span>|</span>
+        <span class="util-link" onclick="alert('Spawning interface system file selector window layer...')">Import JSON</span>
+        <span>|</span>
+        <span class="util-link" onclick="triggerAppView(null, 'view-prorig')">About Studio</span>
+        <span>|</span>
+        <a href="https://capable-smakager-c0cec3.netlify.app/" target="_blank" class="util-link">Main App Hub</a>
+        <span>|</span>
+    </div>
+
+    <footer>
+        <div class="footer-brand">
+            &copy; 2026 BLOC. STUDIOS — BUILT FOR THE DEEP WORK ERA // BY <span>MOCHIIWORKS</span>
+        </div>
+        <div>
+            ALL_RIGHTS_RESERVED // RIG_VER_2.4.0
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    // 🎨 LOGO & THEME SWITCHER INTERACTIVE MAP
+    function toggleSystemTheme() {
+        const root = document.documentElement;
+        const currentTheme = root.getAttribute('data-theme');
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', nextTheme);
+    }
+
+    // 🔄 WORKSPACE VIEWPORT TOGGLE ENGINE
+    function triggerAppView(event, viewId) {
+        const views = document.querySelectorAll('.sim-view-content');
+        views.forEach(v => v.classList.remove('active'));
+
+        const items = document.querySelectorAll('.nav-item');
+        items.forEach(i => i.classList.remove('active'));
+
+        if (event) {
+            event.currentTarget.classList.add('active');
+        } else {
+            if (viewId === 'view-archive') items[6].classList.add('active');
+            if (viewId === 'view-prorig') items[9].classList.add('active');
+            if (viewId === 'view-terminal') items[10].classList.add('active');
+        }
+
+        document.getElementById(viewId).classList.add('active');
+    }
+
+    // 🖥️ EMBEDDED SHELL TERMINAL EMULATOR
+    function handleTerminalConsoleInput(e) {
+        if (e.key !== 'Enter') return;
+        const input = document.getElementById('term-input');
+        sendMockCode(input.value);
+        input.value = '';
+    }
+
+    function sendMockCode(commandString) {
+        const output = document.getElementById('term-output');
+        const cleaned = commandString.trim().toLowerCase();
+
+        if (cleaned.startsWith('/activate')) {
+            output.innerHTML = `⚡ <strong>INITIALIZING MECHANICAL SECURITY DECRYPT ROUTINES...</strong><br><br>Token signature confirmed. Registration validated across local machine files.<br><span style="color:var(--green);">[ STATUS: PRO RIG ENABLED SUCCESSFUL ]</span><br>Premium components (Typing Racer, Studio Tuner, Telemetry Logs, Wallpaper Matrix) initialized.`;
+            document.getElementById('pro-rig-status').innerHTML = `[ STATUS: PRO RIG UNLOCKED ]`;
+            document.getElementById('pro-rig-status').style.background = `var(--green)`;
+            triggerAppView(null, 'view-prorig');
+        } else if (cleaned === ':telemetry') {
+            output.innerHTML = `📡 <strong>NATIVE LIFECYCLE MONITOR VECTOR CHANNELS:</strong><br><br>● github.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [02:11:04 spent] ● <span style="color:var(--orange);">ACTIVE</span><br>● capable-smakager... &nbsp;&nbsp;&nbsp; [00:34:12 spent] ● <span style="color:var(--orange);">ACTIVE</span><br>● stackoverflow.com &nbsp;&nbsp;&nbsp;&nbsp; [00:15:22 spent] ● <span style="color:var(--secondary);">INACTIVE</span>`;
+            triggerAppView(null, 'view-terminal');
+        } else if (cleaned === 'clear') {
+            output.innerHTML = `SYSTEM BUFFER EVACUATED. SHELL MATRIX OPEN FOR OPERATIONAL STRUCTURAL COMMANDS.`;
+        } else {
+            output.innerHTML = `❌ SYSTEM DISCONNECT EXCEPTION // UNRECOGNIZED ROUTING PATTERN: "${commandString}"<br>Execute :telemetry or use /activate [your_key] to update framework variables.`;
+        }
+    }
+</script>
+
+</body>
+</html>
