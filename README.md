@@ -38,10 +38,10 @@ If you clear your browser cache, browsing data, or site cookies:
 
 Before performing any system maintenance or cleaning your browser environments, use the built-in data pipeline:
 
-1. **Export Dynamic Backups Regularly:** Navigate to the Data Engine and invoke `exportData()`  (or use the designated backup control) to compile your entire ecosystem matrix into a clean `.json` file downloaded straight to your local drive.
+1. **Export Dynamic Backups Regularly:** Navigate to the Data Engine and invoke **Export JSON**  (or use the designated backup control) to compile your entire ecosystem matrix into a clean `.json` file downloaded straight to your local drive.
 
 
-2. **Re-establish Your Local Workspaces:** If a wipe occurs, you can fully restore your environment by running `importData()` to parse your saved `.json` matrix directly back into the engine configuration blocks.
+2. **Re-establish Your Local Workspaces:** If a wipe occurs, you can fully restore your environment by running **Import JSON** to parse your saved `.json` matrix directly back into the engine configuration blocks.
 
 **NOTE: NO DATA IS BEING COLLECTED EVER**
 
