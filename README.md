@@ -43,4 +43,6 @@ Before performing any system maintenance or cleaning your browser environments, 
 
 2. **Re-establish Your Local Workspaces:** If a wipe occurs, you can fully restore your environment by running `importData()` to parse your saved `.json` matrix directly back into the engine configuration blocks.
 
+**NOTE: NO DATA IS BEING COLLECTED EVER**
+
 - Bloc. Studios | MochiiWorks 
