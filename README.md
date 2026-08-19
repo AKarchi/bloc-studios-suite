@@ -3,7 +3,7 @@ https://bloc-studios-suite.vercel.app/
 
 This is the link for the actual web platform. No sign up/sign in. Ad-free for both pro access and free access. Yes, it's a freemium, but it is a lifetime access, one-time payment only at minimum of $3 via Ko-fi. 
 
-https://capable-smakager-c0cec3.netlify.app/
+https://bloc-studios.netlify.app/
 
 🔒 **DATA PRIVACY & AUTO-SAVE NOTE**
 **How Auto-Save works:**  Every letter you draft, every task you toggle, and every schedule block you modify triggers an instantaneous mechanical auto-save directly to your browser's local sandbox memory (`LocalStorage`). There are no "Save" buttons because your work is committed on every single keystroke.
